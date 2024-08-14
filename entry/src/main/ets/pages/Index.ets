@@ -173,11 +173,12 @@ struct EnablementItem {
 struct TutorialItem {
   private title: string = "Step1 快速入门介绍"
   private brief: string = "本篇教程实现了快速入门——一个用于了解和学习HarmonyOS的应用程序 。"
+  @Prop tutorialItem: ArticleClass;
 
   build() {
     Row() {
       Column() {
-        Text(this.title)
+        Text(this.tutorialItem.title)
           .height(19)
           .width('100%')
           .fontSize(14)
@@ -186,7 +187,7 @@ struct TutorialItem {
           .maxLines(1)
           .fontWeight(400)
           .margin({ top: 4 })
-        Text(this.brief)
+        Text(this.tutorialItem.brief)
           .height(32)
           .width('100%')
           .fontSize(12)
@@ -203,7 +204,7 @@ struct TutorialItem {
       .alignItems(HorizontalAlign.Start) // 内部子组件向左对齐
       .margin({ right: 12 })
 
-      Image($r('app.media.enablement_pic1'))
+      Image(this.tutorialItem.imageSrc)
         .height(64)
         .width(108)
         .objectFit(ImageFit.Cover)
@@ -258,11 +259,19 @@ struct EnablementView {
         .padding({ left: 16 })
         .margin({ bottom: 8.5 })
       Grid() {
-
+        ForEach(this.enablementList, (item: ArticleClass) => {
+          // 将EnablementItem作为GridItem的子组件，
+          // 并将enablementList每一项的内容作为参数传递给EnablementItem组件进行渲染
+          GridItem() {
+            EnablementItem({ enablementItem: item })
+          }
+        }, (item: ArticleClass) => item.id)
       }
+      // rowsTemplate和columnsTemplate属性值是一个由多个空格和'数字+fr'间隔拼接的字符串，
+      // fr的个数即网格布局的行或列数，fr前面的数值大小，用于计算该行或列在网格布局宽度上的占比
       .rowsTemplate('1fr')
       .columnsGap(8)
-      .scrollBar(BarState.Off)
+      .scrollBar(BarState.Off) // 关闭滚动条
       .height(169)
       .padding({ top: 2, left: 16, right: 16 })
     }
@@ -310,5 +319,26 @@ struct TutorialView {
   ]
 
   build() {
+    Column() {
+      Text('入门教程')
+        .fontColor('#182431')
+        .fontSize(16)
+        .fontWeight(500)
+        .fontFamily('HarmonyHeiTi-medium')
+        .textAlign(TextAlign.Start)
+        .padding({ left: 16 })
+        .margin({ bottom: 8.5 })
+      List({ space: 12 }) {
+        ForEach(this.tutorialList, (item: ArticleClass) => {
+          ListItem() {
+            TutorialItem({ tutorialItem: item })
+          }
+        }, (item: ArticleClass) => item.id)
+      }
+      .scrollBar(BarState.Off)
+      .padding({ left: 16, right: 16 })
+    }
+    .margin({ top: 18 })
+    .alignItems(HorizontalAlign.Start)
   }
 }

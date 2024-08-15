@@ -9,16 +9,15 @@ export struct Banner {
 
   // 在创建自定义组件的新实例后，在执行其build()函数之前执行
   aboutToAppear(): void {
-    this.getBannerDataFromJson();
+    this.getBannerDataFromJSON();
   }
 
-  getBannerDataFromJson() {
+  getBannerDataFromJSON() {
     getContext(this).resourceManager.getRawFileContent('BannerData.json').then(value => {
       // 获取buffer内容
       let buffer: ArrayBufferLike = value.buffer;
       // 转换为字符串
-      let res: string = bufferToString(buffer);
-      console.log(res);
+      let res: string =  bufferToString(buffer);
       // 解析为数据结构
       this.bannerList = JSON.parse(res) as BannerClass[];
     })
